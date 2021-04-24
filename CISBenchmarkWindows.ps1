@@ -1,3 +1,6 @@
+   
+Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\" -Name "SCENoApplyLegacyAuditPolicy" -Value 1
+
 
 #region auditLogs
 
@@ -16,7 +19,7 @@ Auditpol /set /subcategory:"User Account Management" /success:enable /failure:en
 # Detailed Tracking
 Auditpol /set /subcategory:"DPAPI Activity" /success:disable /failure:disable
 Auditpol /set /subcategory:"Plug and Play Events" /success:enable 
-Auditpol /set /subcategory:"Process Creation" /success:enable /failure:enable
+Auditpol /set /subcategory:"Process Creation" /success:enable /failure:enabley
 Auditpol /set /subcategory:"Process Termination" /success:disable /failure:disable
 Auditpol /set /subcategory:"RPC Events" /success:enable /failure:enable
 Auditpol /set /subcategory:"Token Right Adjusted Events" /success:enable
@@ -73,9 +76,14 @@ Auditpol /set /subcategory:"System Integrity" /success:enable /failure:enable
 #endregion
 
 
+wevtutil sl Application /ms:67108864 /rt:false /ab:false
+wevtutil sl System /ms:67108864 /rt:false /ab:false
+wevtutil sl Security /ms:134217728 /rt:false /ab:false
+wevtutil sl 'Windows PowerShell' /ms:67108864 /rt:false /ab:false
 
-
-
-
-
-
+<#
+wevtutil gl Application
+wevtutil gl System
+wevtutil gl Security
+wevtutil gl 'Windows PowerShell'
+#>
