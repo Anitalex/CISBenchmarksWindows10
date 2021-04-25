@@ -76,7 +76,7 @@ Auditpol /set /subcategory:"System Integrity" /success:enable /failure:enable
 
 #endregion
 
-
+#region EventLogSizes
 wevtutil sl Application /ms:67108864 /rt:false /ab:false
 wevtutil sl System /ms:67108864 /rt:false /ab:false
 wevtutil sl Security /ms:134217728 /rt:false /ab:false
@@ -90,8 +90,10 @@ wevtutil gl System
 wevtutil gl Security
 wevtutil gl 'Windows PowerShell'
 #>
+#endregion
 
-#region PowershellLogging
+
+#region WindowsPowershellLogging
 # Module Logging
 if ((Get-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell\ModuleLogging").EnableModuleLogging -eq 1){
     Write-Host "EnableModuleLogging already is on"
@@ -109,8 +111,8 @@ if ((Get-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windo
     New-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell\ModuleLogging" -Name "EnableModuleLogging" -Value 1
 }
 
-if ((Get-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell\ModuleLogging").ModuleNames -eq '* = *'){
-    Write-Host "EnableModuleLogging already is on"
+if ((Get-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell\ModuleLogging\ModuleNames").'*' -eq '*'){
+    Write-Host "Module Names logging already is on"
 } else {
     if(Test-Path -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell"){
         Write-Host "Powershell registry key exists"
@@ -122,7 +124,12 @@ if ((Get-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windo
     } else {
         New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell\ModuleLogging"
     }
-    New-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell\ModuleLogging" -Name "ModuleNames" -Value '* = *'
+    if(Test-Path -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell\ModuleLogging\ModuleNames"){
+        Write-Host "Powershell Module Names registry key exists"
+    } else {
+        New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell\ModuleLogging\ModuleNames"
+    }
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell\ModuleLogging\ModuleNames" -Name '*' -Value '*'
 }
 
 
@@ -195,5 +202,119 @@ if ((Get-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windo
 }
 
 #endregion
+
+#region PowershellCoreLogging
+
+# Module Logging
+if ((Get-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore\ModuleLogging").EnableModuleLogging -eq 1){
+    Write-Host "EnableModuleLogging already is on"
+} else {
+    if(Test-Path -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore"){
+        Write-Host "Powershell registry key exists"
+    } else {
+        New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore"
+    }
+    if(Test-Path -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore\ModuleLogging"){
+        Write-Host "Powershell Module Logging registry key exists"
+    } else {
+        New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore\ModuleLogging"
+    }
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore\ModuleLogging" -Name "EnableModuleLogging" -Value 1
+}
+
+if ((Get-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore\ModuleLogging\ModuleNames").'*' -eq '*'){
+    Write-Host "Module Names logging already is on"
+} else {
+    if(Test-Path -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore"){
+        Write-Host "Powershell registry key exists"
+    } else {
+        New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore"
+    }
+    if(Test-Path -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore\ModuleLogging"){
+        Write-Host "Powershell Module Logging registry key exists"
+    } else {
+        New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore\ModuleLogging"
+    }
+    if(Test-Path -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore\ModuleLogging\ModuleNames"){
+        Write-Host "Powershell Module Names registry key exists"
+    } else {
+        New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore\ModuleLogging\ModuleNames"
+    }
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore\ModuleLogging\ModuleNames" -Name '*' -Value '*'
+}
+
+# Script Block Logging
+if ((Get-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore\ScriptBlockLogging").EnableScriptBlockLogging -eq 1){
+    Write-Host "EnableScriptBlockLogging already is on for PowerShell Core"
+} else {
+    if(Test-Path -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore"){
+        Write-Host "PowershellCore registry key exists"
+    } else {
+        New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore"
+    }
+    if(Test-Path -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore\ScriptBlockLogging"){
+        Write-Host "PowershellCore ScriptBlockLogging registry key exists"
+    } else {
+        New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore\ScriptBlockLogging"
+    }
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore\ScriptBlockLogging" -Name "EnableScriptBlockLogging" -Value 1
+}
+
+# Transcription
+
+if ((Get-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore\Transcription").EnableTranscripting -eq 1){
+    Write-Host "EnableTranscripting already is on"
+} else {
+    if(Test-Path -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore"){
+        Write-Host "Powershell registry key exists"
+    } else {
+        New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore"
+    }
+    if(Test-Path -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore\Transcription"){
+        Write-Host "Powershell Transcription registry key exists"
+    } else {
+        New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore\Transcription"
+    }
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore\Transcription" -Name "EnableTranscripting" -Value 1
+}
+
+if ((Get-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore\Transcription").EnableInvocationHeader -eq 1){
+    Write-Host "EnableInvocationHeader already is on"
+} else {
+    if(Test-Path -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore"){
+        Write-Host "Powershell registry key exists"
+    } else {
+        New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore"
+    }
+    if(Test-Path -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore\Transcription"){
+        Write-Host "Powershell Transcription registry key exists"
+    } else {
+        New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore\Transcription"
+    }
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore\Transcription" -Name "EnableInvocationHeader" -Value 1
+}
+
+if ((Get-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore\Transcription").OutputDirectory -eq 1){
+    Write-Host "OutputDirectory already is on"
+} else {
+    if(Test-Path -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore"){
+        Write-Host "Powershell registry key exists"
+    } else {
+        New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore"
+    }
+    if(Test-Path -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore\Transcription"){
+        Write-Host "Powershell Transcription registry key exists"
+    } else {
+        New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore\Transcription"
+    }
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\PowerShellCore\Transcription" -Name "OutputDirectory" -Value 'c:\Logs'
+}
+
+#endregion
+
+
+
+
+
 
 
