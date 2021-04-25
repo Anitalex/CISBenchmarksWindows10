@@ -1,4 +1,5 @@
-   
+
+# enable advanced auditing
 Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\" -Name "SCENoApplyLegacyAuditPolicy" -Value 1
 
 
@@ -80,6 +81,8 @@ wevtutil sl Application /ms:67108864 /rt:false /ab:false
 wevtutil sl System /ms:67108864 /rt:false /ab:false
 wevtutil sl Security /ms:134217728 /rt:false /ab:false
 wevtutil sl 'Windows PowerShell' /ms:67108864 /rt:false /ab:false
+wevtutil sl PowerShellCore/Operational /ms:67108864 /rt:false /ab:false
+
 
 <#
 wevtutil gl Application
@@ -87,3 +90,110 @@ wevtutil gl System
 wevtutil gl Security
 wevtutil gl 'Windows PowerShell'
 #>
+
+#region PowershellLogging
+# Module Logging
+if ((Get-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell\ModuleLogging").EnableModuleLogging -eq 1){
+    Write-Host "EnableModuleLogging already is on"
+} else {
+    if(Test-Path -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell"){
+        Write-Host "Powershell registry key exists"
+    } else {
+        New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell"
+    }
+    if(Test-Path -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell\ModuleLogging"){
+        Write-Host "Powershell Module Logging registry key exists"
+    } else {
+        New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell\ModuleLogging"
+    }
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell\ModuleLogging" -Name "EnableModuleLogging" -Value 1
+}
+
+if ((Get-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell\ModuleLogging").ModuleNames -eq '* = *'){
+    Write-Host "EnableModuleLogging already is on"
+} else {
+    if(Test-Path -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell"){
+        Write-Host "Powershell registry key exists"
+    } else {
+        New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell"
+    }
+    if(Test-Path -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell\ModuleLogging"){
+        Write-Host "Powershell Module Logging registry key exists"
+    } else {
+        New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell\ModuleLogging"
+    }
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell\ModuleLogging" -Name "ModuleNames" -Value '* = *'
+}
+
+
+# Script Block Logging
+if ((Get-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging").EnableScriptBlockLogging -eq 1){
+    Write-Host "EnableScriptBlockLogging already is on"
+} else {
+    if(Test-Path -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell"){
+        Write-Host "Powershell registry key exists"
+    } else {
+        New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell"
+    }
+    if(Test-Path -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging"){
+        Write-Host "Powershell Script Block Logging registry key exists"
+    } else {
+        New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging"
+    }
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging" -Name "EnableScriptBlockLogging" -Value 1
+}
+
+
+# Transcription
+
+if ((Get-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell\Transcription").EnableTranscripting -eq 1){
+    Write-Host "EnableTranscripting already is on"
+} else {
+    if(Test-Path -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell"){
+        Write-Host "Powershell registry key exists"
+    } else {
+        New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell"
+    }
+    if(Test-Path -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell\Transcription"){
+        Write-Host "Powershell Transcription registry key exists"
+    } else {
+        New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell\Transcription"
+    }
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell\Transcription" -Name "EnableTranscripting" -Value 1
+}
+
+if ((Get-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell\Transcription").EnableInvocationHeader -eq 1){
+    Write-Host "EnableInvocationHeader already is on"
+} else {
+    if(Test-Path -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell"){
+        Write-Host "Powershell registry key exists"
+    } else {
+        New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell"
+    }
+    if(Test-Path -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell\Transcription"){
+        Write-Host "Powershell Transcription registry key exists"
+    } else {
+        New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell\Transcription"
+    }
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell\Transcription" -Name "EnableInvocationHeader" -Value 1
+}
+
+if ((Get-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell\Transcription").OutputDirectory -eq 1){
+    Write-Host "OutputDirectory already is on"
+} else {
+    if(Test-Path -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell"){
+        Write-Host "Powershell registry key exists"
+    } else {
+        New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell"
+    }
+    if(Test-Path -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell\Transcription"){
+        Write-Host "Powershell Transcription registry key exists"
+    } else {
+        New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell\Transcription"
+    }
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell\Transcription" -Name "OutputDirectory" -Value 'c:\Logs'
+}
+
+#endregion
+
+
