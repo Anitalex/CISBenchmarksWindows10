@@ -1,3 +1,5 @@
+# This script needs to be run as administrator
+
 
 # enable advanced auditing
 Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\" -Name "SCENoApplyLegacyAuditPolicy" -Value 1
